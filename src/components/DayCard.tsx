@@ -1,18 +1,42 @@
 import type { Day } from '../types'
 import { PlaceCard } from './PlaceCard'
 
-export function DayCard({ day }: { day: Day }) {
+export function DayCard({
+  day,
+  dayNumber,
+}: {
+  day: Day
+  dayNumber: number
+}) {
+  const subLabel = day.label.includes('·')
+    ? day.label.split('·')[1]?.trim()
+    : day.label
+
   return (
-    <section className="rounded-2xl bg-slate-900/70 p-4 ring-1 ring-white/5">
-      <header className="mb-3 flex items-baseline justify-between">
-        <h2 className="text-lg font-semibold text-slate-100">{day.label}</h2>
-        <span className="text-xs tabular-nums text-slate-400">{day.date}</span>
+    <section className="rounded-3xl bg-white/[0.04] p-5 ring-1 ring-white/10 backdrop-blur-xl md:p-6">
+      <header className="mb-5 flex items-baseline justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-[10px] font-bold tracking-[0.25em] text-teal-300/80">
+            DAY {dayNumber}
+          </p>
+          <h2 className="mt-1 truncate text-lg font-semibold text-slate-50">
+            {subLabel}
+          </h2>
+        </div>
+        <span className="shrink-0 text-xs tabular-nums text-slate-400">
+          {day.date.slice(5).replace('-', '.')}
+        </span>
       </header>
-      <ul className="space-y-2">
-        {day.places.map((p) => (
-          <PlaceCard key={p.id} place={p} />
+
+      <ol className="relative space-y-3.5">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute top-4 bottom-4 left-4 w-px bg-gradient-to-b from-teal-400/40 via-white/10 to-transparent"
+        />
+        {day.places.map((place) => (
+          <PlaceCard key={place.id} place={place} />
         ))}
-      </ul>
+      </ol>
     </section>
   )
 }

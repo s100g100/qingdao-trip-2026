@@ -8,8 +8,15 @@ body,
 
 body {
   font-family:
-    ui-sans-serif, system-ui, -apple-system, "Apple SD Gothic Neo",
-    "Pretendard", "Noto Sans KR", sans-serif;
+    "Pretendard Variable", "Pretendard", ui-sans-serif, system-ui,
+    -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
+  text-rendering: optimizeLegibility;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
