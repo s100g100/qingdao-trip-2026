@@ -1,6 +1,20 @@
 import { useEffect, useRef, useState } from 'react'
-import { Images, Loader2, Upload, X } from 'lucide-react'
-import { listPhotos, uploadPhoto, type Photo } from '../lib/photos'
+import {
+  Download,
+  Images,
+  Loader2,
+  Trash2,
+  Upload,
+  X,
+} from 'lucide-react'
+import {
+  deletePhoto,
+  getDownloadUrl,
+  listPhotos,
+  makeDownloadFilename,
+  uploadPhoto,
+  type Photo,
+} from '../lib/photos'
 import { supabaseConfigured } from '../lib/config'
 import { getName } from '../lib/access'
 
@@ -11,7 +25,9 @@ export function Gallery() {
   const [progress, setProgress] = useState({ done: 0, total: 0 })
   const [error, setError] = useState<string | null>(null)
   const [lightbox, setLightbox] = useState<Photo | null>(null)
+  const [deleting, setDeleting] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  const myName = getName()
 
   async function refresh() {
     setLoading(true)
@@ -50,6 +66,34 @@ export function Gallery() {
     setUploading(false)
     if (inputRef.current) inputRef.current.value = ''
     await refresh()
+  }
+
+  function handleDownload(photo: Photo) {
+    const url = getDownloadUrl(photo.name, makeDownloadFilename(photo))
+    if (!url) return
+    const a = document.createElement('a')
+    a.href = url
+    a.rel = 'noopener'
+    a.click()
+  }
+
+  async function handleDelete(photo: Photo) {
+    const isMine = photo.uploader === myName
+    const msg = isMine
+      ? '이 사진을 삭제할까?'
+      : `${photo.uploader}님이 올린 사진이야. 정말 삭제할까?`
+    if (!confirm(msg)) return
+    setDeleting(true)
+    setError(null)
+    try {
+      await deletePhoto(photo.name)
+      setLightbox(null)
+      setPhotos((prev) => prev.filter((p) => p.name !== photo.name))
+    } catch (e) {
+      setError(`삭제 실패: ${e instanceof Error ? e.message : String(e)}`)
+    } finally {
+      setDeleting(false)
+    }
   }
 
   if (!supabaseConfigured) {
@@ -139,16 +183,37 @@ export function Gallery() {
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-md"
           onClick={() => setLightbox(null)}
         >
-          <button
-            className="absolute top-4 right-4 rounded-full bg-white/10 p-2 text-white ring-1 ring-white/20 backdrop-blur-md hover:bg-white/20"
-            onClick={(e) => {
-              e.stopPropagation()
-              setLightbox(null)
-            }}
-            aria-label="닫기"
+          <div
+            className="absolute top-4 right-4 flex gap-2"
+            onClick={(e) => e.stopPropagation()}
           >
-            <X size={18} />
-          </button>
+            <button
+              onClick={() => handleDownload(lightbox)}
+              className="rounded-full bg-sky-500/20 p-2 text-sky-200 ring-1 ring-sky-300/30 backdrop-blur-md transition hover:bg-sky-500/30"
+              aria-label="다운로드"
+            >
+              <Download size={18} />
+            </button>
+            <button
+              onClick={() => handleDelete(lightbox)}
+              disabled={deleting}
+              className="rounded-full bg-rose-500/20 p-2 text-rose-200 ring-1 ring-rose-300/30 backdrop-blur-md transition hover:bg-rose-500/30 disabled:opacity-50"
+              aria-label="삭제"
+            >
+              {deleting ? (
+                <Loader2 size={18} className="animate-spin" />
+              ) : (
+                <Trash2 size={18} />
+              )}
+            </button>
+            <button
+              onClick={() => setLightbox(null)}
+              className="rounded-full bg-white/10 p-2 text-white ring-1 ring-white/20 backdrop-blur-md hover:bg-white/20"
+              aria-label="닫기"
+            >
+              <X size={18} />
+            </button>
+          </div>
           <img
             src={lightbox.url}
             alt=""
