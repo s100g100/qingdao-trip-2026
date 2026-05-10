@@ -6,8 +6,15 @@ import {
   Coffee,
   ShoppingBag,
   BedDouble,
+  MapPin,
 } from 'lucide-react'
 import type { Category, Place } from '../types'
+
+function buildMapUrl(place: Place): string {
+  if (place.mapUrl) return place.mapUrl
+  const query = place.address ?? `${place.name} 칭다오`
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`
+}
 
 const ICONS = {
   transport: Plane,
@@ -41,6 +48,8 @@ export function PlaceCard({ place }: { place: Place }) {
   const storageKey = `note:${place.id}`
   const [note, setNote] = useState('')
   const [open, setOpen] = useState(false)
+  const hasMap = place.category !== 'transport'
+  const mapUrl = hasMap ? buildMapUrl(place) : null
 
   useEffect(() => {
     const saved = localStorage.getItem(storageKey)
@@ -64,9 +73,26 @@ export function PlaceCard({ place }: { place: Place }) {
             <span className="text-slate-400">· {place.time}</span>
           )}
         </div>
-        <h3 className="mt-1.5 text-[15px] font-semibold text-slate-50">
-          {place.name}
-        </h3>
+        {mapUrl ? (
+          <a
+            href={mapUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-1.5 inline-flex items-center gap-1.5 text-[15px] font-semibold text-slate-50 underline decoration-teal-400/40 decoration-2 underline-offset-4 transition hover:decoration-teal-300"
+          >
+            <span>{place.name}</span>
+            <MapPin
+              size={13}
+              className="shrink-0 text-teal-300/80"
+              strokeWidth={2.25}
+              aria-label="지도에서 열기"
+            />
+          </a>
+        ) : (
+          <h3 className="mt-1.5 text-[15px] font-semibold text-slate-50">
+            {place.name}
+          </h3>
+        )}
         {place.note && (
           <p className="mt-0.5 text-xs leading-relaxed text-slate-400">
             {place.note}

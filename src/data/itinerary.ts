@@ -12,12 +12,41 @@ export const itinerary: Day[] = [
         category: 'transport',
         note: '전원 동일 항공편',
       },
+      {
+        id: 'lodging',
+        time: '체크인',
+        name: '숙소 (Wanke Meili Xincheng)',
+        category: 'lodging',
+        address: 'Wanke Meili Xincheng, Chengyang District, Qingdao',
+        note: '万科美丽新城 1期 1号楼 1单元 902호 · 청양구',
+      },
+      {
+        id: 'd1-return',
+        time: '23:00',
+        name: '숙소 복귀',
+        category: 'lodging',
+        address: 'Wanke Meili Xincheng, Chengyang District, Qingdao',
+      },
     ],
   },
   {
     date: '2026-05-18',
     label: 'Day 2 · 월요일',
-    places: [],
+    places: [
+      {
+        id: 'd2-beer-museum',
+        time: '09:30–11:30',
+        name: '칭다오 맥주 박물관',
+        category: 'sight',
+      },
+      {
+        id: 'd2-return',
+        time: '23:00',
+        name: '숙소 복귀',
+        category: 'lodging',
+        address: 'Wanke Meili Xincheng, Chengyang District, Qingdao',
+      },
+    ],
   },
   {
     date: '2026-05-19',
