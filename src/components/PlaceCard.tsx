@@ -7,6 +7,7 @@ import {
   ShoppingBag,
   BedDouble,
   MapPin,
+  ExternalLink,
 } from 'lucide-react'
 import type { Category, Place } from '../types'
 
@@ -93,10 +94,33 @@ export function PlaceCard({ place }: { place: Place }) {
             {place.name}
           </h3>
         )}
+        {place.nameLocal && (
+          <p className="mt-0.5 text-[11px] text-slate-400">{place.nameLocal}</p>
+        )}
         {place.note && (
-          <p className="mt-0.5 text-xs leading-relaxed text-slate-400">
+          <p className="mt-1 text-xs leading-relaxed text-slate-400">
             {place.note}
           </p>
+        )}
+
+        {(place.cost || place.blogUrl) && (
+          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px]">
+            {place.cost && (
+              <span className="rounded-md bg-black/25 px-1.5 py-0.5 text-slate-300">
+                {place.cost}
+              </span>
+            )}
+            {place.blogUrl && (
+              <a
+                href={place.blogUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-sky-300/90 hover:text-sky-200"
+              >
+                <ExternalLink size={11} /> 블로그
+              </a>
+            )}
+          </div>
         )}
 
         <button

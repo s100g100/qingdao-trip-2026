@@ -5,6 +5,9 @@ import { DayTabs } from './components/DayTabs'
 import { DayCard } from './components/DayCard'
 import { ViewToggle, type View } from './components/ViewToggle'
 import { Gallery } from './components/Gallery'
+import { Recommendations } from './components/Recommendations'
+import { Transit } from './components/Transit'
+import { Phrases } from './components/Phrases'
 import { PasswordGate } from './components/PasswordGate'
 import { isUnlocked } from './lib/access'
 
@@ -54,6 +57,24 @@ export default function App() {
             </div>
           </main>
         </>
+      )}
+
+      {view === 'picks' && (
+        <main className="mx-auto max-w-6xl px-4 pt-5 pb-24 md:px-8">
+          <Recommendations />
+        </main>
+      )}
+
+      {view === 'transit' && (
+        <main className="mx-auto max-w-6xl px-4 pt-5 pb-24 md:px-8">
+          <Transit />
+        </main>
+      )}
+
+      {view === 'phrases' && (
+        <main className="mx-auto max-w-6xl px-4 pt-5 pb-24 md:px-8">
+          <Phrases />
+        </main>
       )}
 
       {view === 'gallery' && (

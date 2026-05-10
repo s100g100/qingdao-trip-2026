@@ -10,10 +10,13 @@ export type Place = {
   id: string
   time?: string
   name: string
+  nameLocal?: string
   category: Category
   address?: string
+  cost?: string
   note?: string
   mapUrl?: string
+  blogUrl?: string
 }
 
 export type Day = {

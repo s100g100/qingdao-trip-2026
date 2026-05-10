@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>칭다오 트립 2026 — 널널 일정 제안</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0b1018;
+        --panel: rgba(255, 255, 255, 0.05);
+        --ring: rgba(255, 255, 255, 0.1);
+        --teal: #5eead4;
+        --teal-soft: rgba(94, 234, 212, 0.18);
+        --sky: #7dd3fc;
+        --amber: #fcd34d;
+        --emerald: #6ee7b7;
+        --rose: #fda4af;
+        --slate: #cbd5e1;
+        --muted: #94a3b8;
+        --dim: #64748b;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+          "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+        background: var(--bg);
+        color: var(--slate);
+        line-height: 1.55;
+        background-image:
+          radial-gradient(40rem 40rem at -10% -10%, rgba(20, 184, 166, 0.18), transparent 60%),
+          radial-gradient(35rem 35rem at 120% 0%, rgba(56, 189, 248, 0.15), transparent 60%),
+          radial-gradient(35rem 35rem at 50% 120%, rgba(249, 115, 22, 0.10), transparent 60%);
+        background-attachment: fixed;
+      }
+      .wrap { max-width: 920px; margin: 0 auto; padding: 28px 18px 80px; }
+      header.top h1 {
+        font-size: 22px; margin: 0 0 4px; color: #f8fafc;
+        letter-spacing: -0.01em;
+      }
+      header.top .sub { color: var(--muted); font-size: 13px; }
+      header.top .meta {
+        margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px;
+      }
+      .chip {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 5px 10px; border-radius: 999px;
+        background: var(--panel); border: 1px solid var(--ring);
+        font-size: 12px; color: var(--slate);
+      }
+      .chip b { color: #f1f5f9; font-weight: 600; }
+
+      section.day {
+        margin-top: 22px; padding: 18px;
+        background: var(--panel); border: 1px solid var(--ring);
+        border-radius: 22px; backdrop-filter: blur(14px);
+      }
+      section.day > h2 {
+        margin: 0 0 4px; font-size: 11px; letter-spacing: 0.25em;
+        color: var(--teal); font-weight: 700; text-transform: uppercase;
+      }
+      section.day > h3 {
+        margin: 0 0 14px; font-size: 18px; color: #f8fafc; font-weight: 600;
+      }
+      section.day > h3 .date {
+        font-size: 12px; color: var(--muted); font-weight: 400;
+        margin-left: 8px; letter-spacing: 0.04em;
+      }
+
+      ol.tl { list-style: none; margin: 0; padding: 0; position: relative; }
+      ol.tl::before {
+        content: ""; position: absolute;
+        left: 14px; top: 12px; bottom: 12px; width: 1px;
+        background: linear-gradient(180deg, var(--teal-soft), transparent);
+      }
+      ol.tl > li {
+        position: relative; display: flex; gap: 12px;
+        padding: 6px 0;
+      }
+      .dot {
+        flex: 0 0 28px; height: 28px; border-radius: 999px;
+        display: grid; place-items: center;
+        font-size: 10px; font-weight: 700; color: #0b1018;
+        background: linear-gradient(180deg, var(--teal), #38bdf8);
+        margin-top: 4px; z-index: 1;
+        box-shadow: 0 0 0 4px var(--bg);
+      }
+      .dot.transport { background: linear-gradient(180deg, #7dd3fc, #38bdf8); }
+      .dot.meal      { background: linear-gradient(180deg, #fcd34d, #f59e0b); }
+      .dot.sight     { background: linear-gradient(180deg, #6ee7b7, #10b981); }
+      .dot.cafe      { background: linear-gradient(180deg, #fda4af, #f43f5e); color: #fff; }
+      .dot.lodging   { background: linear-gradient(180deg, #cbd5e1, #94a3b8); }
+      .dot.shop      { background: linear-gradient(180deg, #c4b5fd, #8b5cf6); color: #fff; }
+
+      .item {
+        flex: 1; min-width: 0;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--ring);
+        border-radius: 14px; padding: 10px 12px;
+      }
+      .item .row1 {
+        display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline;
+        font-size: 12px; color: var(--muted);
+      }
+      .item .time { color: #f1f5f9; font-weight: 600; font-feature-settings: "tnum"; }
+      .item .name {
+        margin: 4px 0 2px; color: #f8fafc; font-size: 15px;
+        font-weight: 600;
+      }
+      .item .name a {
+        color: inherit; text-decoration: underline;
+        text-decoration-color: var(--teal-soft);
+        text-decoration-thickness: 2px;
+        text-underline-offset: 4px;
+      }
+      .item .name a:hover { text-decoration-color: var(--teal); }
+      .item .desc { font-size: 12px; color: var(--slate); margin-top: 2px; }
+      .item .meta-row {
+        margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px;
+        font-size: 11px; color: var(--muted);
+      }
+      .item .meta-row span { background: rgba(0,0,0,0.25); padding: 2px 8px; border-radius: 6px; }
+      .item .meta-row .tip { color: var(--teal); }
+
+      table.transit {
+        width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px;
+      }
+      table.transit th, table.transit td {
+        text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--ring);
+      }
+      table.transit th { color: var(--muted); font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
+      table.transit td.time { color: #f1f5f9; font-weight: 600; font-feature-settings: "tnum"; }
+
+      .notes ul { margin: 0; padding-left: 18px; }
+      .notes li { margin: 4px 0; font-size: 13px; }
+
+      .group-tag {
+        display: inline-block; padding: 1px 7px; border-radius: 999px;
+        font-size: 10px; font-weight: 700; letter-spacing: 0.05em;
+        background: rgba(125, 211, 252, 0.15); color: #bae6fd;
+        border: 1px solid rgba(125, 211, 252, 0.3);
+        margin-right: 4px;
+      }
+      .group-tag.b { background: rgba(252, 211, 77, 0.12); color: #fde68a; border-color: rgba(252, 211, 77, 0.3); }
+
+      .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+      .legend .leg { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted); }
+      .legend .swatch { width: 10px; height: 10px; border-radius: 50%; }
+      .legend .swatch.transport { background: #38bdf8; }
+      .legend .swatch.meal { background: #f59e0b; }
+      .legend .swatch.sight { background: #10b981; }
+      .legend .swatch.cafe { background: #f43f5e; }
+      .legend .swatch.lodging { background: #94a3b8; }
+      .legend .swatch.shop { background: #8b5cf6; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="top">
+        <h1>칭다오 트립 2026 — 널널 일정 제안 (v0.6)</h1>
+        <div class="sub">2박 3일 · 城阳区(청양구) 万科魅力新城 902호 베이스 · 4명</div>
+        <div class="meta">
+          <span class="chip">📅 <b>2026.05.17 (일) ~ 05.19 (화)</b></span>
+          <span class="chip">🛏 <b>万科魅力新城</b> · 城阳区 兴阳路 × 文阳路</span>
+          <span class="chip">🌤 5월 칭다오 <b>22°C / 14°C</b> · 강우 ~10일</span>
+          <span class="chip">💱 환율 <b>1元 ≈ 215원</b> (2026.05.10 기준)</span>
+          <span class="chip">✈ 김해→칭다오 <b>11:00–11:55</b> (전원)</span>
+          <span class="chip"><span class="group-tag">A</span>인천 14:55–17:40 · 쿸/켱</span>
+          <span class="chip"><span class="group-tag b">B</span>김해 13:15–16:10 · 팍/릉오</span>
+        </div>
+        <div class="legend">
+          <span class="leg"><span class="swatch transport"></span>이동</span>
+          <span class="leg"><span class="swatch meal"></span>식사</span>
+          <span class="leg"><span class="swatch sight"></span>관광</span>
+          <span class="leg"><span class="swatch cafe"></span>카페</span>
+          <span class="leg"><span class="swatch shop"></span>쇼핑</span>
+          <span class="leg"><span class="swatch lodging"></span>숙소</span>
+        </div>
+      </header>
+
+      <!-- DAY 1 -->
+      <section class="day">
+        <h2>Day 1</h2>
+        <h3>도착 + 시난구 야경 코스 (천주교당·소어산·5.4광장)<span class="date">5.17 일</span></h3>
+        <ol class="tl">
+          <li>
+            <div class="dot transport">✈</div>
+            <div class="item">
+              <div class="row1"><span class="time">11:00–11:55</span></div>
+              <div class="name">김해(PUS) → 칭다오 자오둥(TAO)</div>
+              <div class="desc">전원 동일 항공편</div>
+            </div>
+          </li>
+          <li>
+            <div class="dot transport">🚇</div>
+            <div class="item">
+              <div class="row1"><span class="time">12:00–13:30</span></div>
+              <div class="name">공항 → 청양 (메트로 vs 디디)</div>
+              <div class="desc"><b>메트로</b> 8호선, 25–30분, 5–7元 (≈1,100–1,500원) / <b>디디</b> 약 25분, 80–130元 (≈17,200–28,000원), 거리 25–35km.</div>
+              <div class="meta-row tip">💡 4명+캐리어면 디디 2대 ≈ 한 명당 50元 (≈10,800원) — 시간/체력 면 디디 유리</div>
+            </div>
+          </li>
+          <li>
+            <div class="dot lodging">🛏</div>
+            <div class="item">
+              <div class="row1"><span class="time">13:30–14:30</span></div>
+              <div class="name"><a href="https://www.google.com/maps/search/?api=1&query=%E9%9D%92%E5%B2%9B%E5%B8%82%E5%9F%8E%E9%98%B3%E5%8C%BA%E4%B8%87%E7%A7%91%E9%AD%85%E5%8A%9B%E6%96%B0%E5%9F%8E" target="_blank" rel="noopener">숙소 체크인 · 万科魅力新城 902户</a></div>
+              <div class="desc">짐 풀고 휴식. 환전 / 알리페이·위챗페이 잔액 확인.</div>
+            </div>
+          </li>
+          <li>
+            <div class="dot meal">🍜</div>
+            <div class="item">
+              <div class="row1"><span class="time">14:30–15:30</span></div>
+              <div class="name">청양 동네 점심 (호텔 주변)</div>
+              <div class="desc">단지 주변 면/만두집 가볍게. 다운타운까지 1시간 이동 전 든든히.</div>
+              <div class="meta-row tip">💡 다운타운 식사가 메트로로 1시간이라 동네에서 먹는 게 효율적</div>
+            </div>
+          </li>
+          <li>
+            <div class="dot transport">🚇</div>
+            <div class="item">
+              <div class="row1"><span class="time">15:30–17:00</span></div>
+              <div class="name">청양 → 시난구 다운타운 (천주교당 부근)</div>
+              <div class="desc"><b>메트로</b> 1호선/3호선 환승 70–90분, 8–15元 (≈1,700–3,200원) / <b>디디</b> 50분, 130–180元 (≈28,000–38,700원).</div>
+              <div class="meta-row tip">💡 천주교당 가장 가까운 역: 메트로 3호선 青岛站 또는 1호선 中山路역 도보 5분</div>
+            </div>
+          </li>
+          <li>
+            <div class="dot sight">⛪</div>
+            <div class="item">
+              <div class="row1"><span class="time">17:00–18:00</span></div>
+              <div class="name"><a href="https://www.google.com/maps/search/?api=1&query=%E5%9C%A3%E5%BC%A5%E7%88%B1%E5%B0%94%E5%A4%A7%E6%95%99%E5%A0%82+%E9%9D%92%E5%B2%9B" target="_blank" rel="noopener">천주교당 (성 미카엘 대성당) + 중산로 산책</a></div>
+              <div class="desc">浙江路 15号. 1934년 독일 선교사 설계, 60m 첨탑 두 개. 광장 사진 + 中山路 노포·헤이티 들르기.</div>
+              <div class="meta-row">
+                <span>🎫 무료 (광장) · 내부 ¥10</span>
+                <a href="https://www.keyzard.cc/kko6860/nb/224102306710" target="_blank" rel="noopener" style="color:#7dd3fc">📝 천주교당+중산로+피차이위엔 (keyzard)</a>
+                <a href="https://www.peach-flower.co.kr/265" target="_blank" rel="noopener" style="color:#7dd3fc">📝 저장루 천주교회당 (peach-flower)</a>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="dot sight">🐟</div>
+            <div class="item">
+              <div class="row1"><span class="time">18:00–19:00</span></div>
+              <div class="name"><a href="https://www.google.com/maps/search/?api=1&query=%E5%B0%8F%E9%B1%BC%E5%B1%B1%E5%85%AC%E5%9B%AD" target="_blank" rel="noopener">소어산 공원 (小鱼山) — 노을 전망</a></div>
+              <div class="desc">해발 60m. 천주교당에서 도보 15분. 八角누각 览潮阁에서 시내·바다 360°. <b>16:00–18:00이 인생샷</b> 시간대.</div>
+              <div class="meta-row">
+                <span>🎫 15元 (≈3,200원)</span><span>⏱ 1h</span>
+                <a href="https://tommysdiner.net/3038" target="_blank" rel="noopener" style="color:#7dd3fc">📝 동양의 나폴리, 소어산 전망대 (tommysdiner)</a>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="dot transport">🚇</div>
+            <div class="item">
+              <div class="row1"><span class="time">19:00–19:30</span></div>
+              <div class="name">소어산 → 5.4광장 (메트로/디디)</div>
+              <div class="desc">메트로 3호선 20분 / 디디 10분 25–30元 (≈5,400–6,500원).</div>
+            </div>
+          </li>
+          <li>
+            <div class="dot meal">🦐</div>
+            <div class="item">
+              <div class="row1"><span class="time">19:30–20:30</span></div>
+              <div class="name">5.4광장 인근 저녁 — 후보 2</div>
+              <div class="desc">
+                ① <a href="https://www.google.com/maps/search/?api=1&query=%E6%B5%B7%E5%B2%9B%E6%B8%94%E6%9D%91+%E9%9D%92%E5%B2%9B" target="_blank" rel="noopener">海岛漁村 (해도어촌)</a> · 매콤 바지락 + 오징어먹물만두. 마이칼 백화점 도보 5분.<br/>
+                ② <a href="https://www.google.com/maps/search/?api=1&query=%E5%BE%B7%E8%B6%85+%E9%9D%92%E5%B2%9B" target="_blank" rel="noopener">더차오 (Dechao)</a> · 해삼 덮밥. 5.4광장 + 요트경기장 사이.
+              </div>
+              <div class="meta-row"><span>1인 70–120元 (≈15,000–25,800원)</span></div>
+            </div>
+          </li>
+          <li>
+            <div class="dot sight">🌃</div>
+            <div class="item">
+              <div class="row1"><span class="time">20:30–21:30</span></div>
+              <div class="name"><a href="https://www.google.com/maps/search/?api=1&query=%E4%BA%94%E5%9B%9B%E5%B9%BF%E5%9C%BA+%E9%9D%92%E5%B2%9B" target="_blank" rel="noopener">5.4광장 야경 + 미디어파사드</a></div>
+              <div class="desc">5월(하절기)은 화–일 20:00 / 20:30 두 차례 LED 쇼. '5월의 바람' 조형 + 해변 산책.</div>
+              <div class="meta-row">
+                <span>📍 市南区 香港中路</span>
+                <a href="https://www.peach-flower.co.kr/262" target="_blank" rel="noopener" style="color:#7dd3fc">📝 5.4광장 후기 (peach-flower)</a>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="dot transport">🚇</div>
+            <div class="item">
+              <div class="row1"><span class="time">21:30–23:00</span></div>
+              <div class="name">5.4광장 → 청양 복귀</div>
+              <div class="desc">메트로 막차 21:30 임박이라 <b>디디 권장</b>. 130–180元 (≈28,000–38,700원), 4명 분담 ≈ 35–45元/인 (7,500–9,700원).</div>
+            </div>
+          </li>
+          <li>
+            <div class="dot lodging">🛏</div>
+            <div class="item">
+              <div class="row1"><span class="time">~23:00</span></div>
+              <div class="name">숙소 복귀 · 万科魅力新城</div>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <!-- DAY 2 -->
+      <section class="day">
+        <h2>Day 2</h2>
+        <h3>맥주박물관 + 완상청 점심 + 라오산 케이블카·태청궁<span class="date">5.18 월</span></h3>
+        <ol class="tl">
+          <li>
+            <div class="dot meal">🥟</div>
+            <div class="item">
+              <div class="row1"><span class="time">08:00–08:30</span></div>
+              <div class="name">아침 (호텔 주변 또는 단지 내)</div>
+            </div>
+          </li>
+          <li>
+            <div class="dot transport">🚇</div>
+            <div class="item">
+              <div class="row1"><span class="time">08:30–09:30</span></div>
+              <div class="name">청양 → 등주로 (8호선 → 2호선 利津路역)</div>
+              <div class="desc">利津路역 B출구 도보 5분.</div>
+            </div>
+          </li>
+          <li>
+            <div class="dot sight">🍺</div>
+            <div class="item">
+              <div class="row1"><span class="time">09:30–11:30</span><span style="color:#5eead4">✅ 확정</span></div>
+              <div class="name"><a href="https://www.google.com/maps/search/?api=1&query=%E9%9D%92%E5%B2%9B%E5%95%A4%E9%85%92%E5%8D%9A%E7%89%A9%E9%A6%86" target="_blank" rel="noopener">칭다오 맥주 박물관 (青岛啤酒博物馆)</a></div>
+              <div class="desc">市北区 登州路 56号. 시음 포함 코스. 모자/쪼리 안 됨.</div>
+              <div class="meta-row">
+                <span>🎫 60元 전후 (≈12,900원)</span><span>⏱ 2h</span>
+                <a href="https://kimsgotmoney.com/144" target="_blank" rel="noopener" style="color:#7dd3fc">📝 사람이 터져도 가야한다 (kimsgotmoney)</a>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="dot transport">🚖</div>
+            <div class="item">
+              <div class="row1"><span class="time">11:30–12:00</span></div>
+              <div class="name">박물관 → 완상청 (택시)</div>
+              <div class="desc">디디 5–6km, 10–15분, 약 25–30元 (≈5,400–6,500원). 메트로는 환승 30분이라 비효율.</div>
+            </div>
+          </li>
+          <li>
+            <div class="dot meal">🥢</div>
+            <div class="item">
+              <div class="row1"><span class="time">12:00–13:30</span></div>
+              <div class="name"><a href="https://www.google.com/maps/search/?api=1&query=%E9%9D%92%E5%B2%9B%E4%B8%87%E8%B1%A1%E5%9F%8E+MixC" target="_blank" rel="noopener">완상청 (萬象城/MixC) 5층 중식 — 후보 2</a></div>
+              <div class="desc">
+                ① <a href="https://www.google.com/maps/search/?api=1&query=%E7%82%89%E9%B1%BC+%E9%9D%92%E5%B2%9B+%E4%B8%87%E8%B1%A1%E5%9F%8E" target="_blank" rel="noopener">루위 (炉鱼)</a> · 5층, 철판 통생선구이. 마라 베이스, 한국인에게 호평. 웨이팅 있음.<br/>
+                ② <a href="https://www.google.com/maps/search/?api=1&query=%E5%A4%96%E5%A9%86%E5%AE%B6+%E9%9D%92%E5%B2%9B+%E4%B8%87%E8%B1%A1%E5%9F%8E" target="_blank" rel="noopener">와이포자아 (外婆家)</a> · 5층, 절강 가정식. 흑초탕수육·홍소육. 가성비.
+              </div>
+              <div class="meta-row"><span>📍 5.4광장 옆 · 1인 60–100元 (≈13,000–21,500원)</span></div>
+            </div>
+          </li>
+          <li>
+            <div class="dot transport">🚖</div>
+            <div class="item">
+              <div class="row1"><span class="time">13:30–14:30</span></div>
+              <div class="name">완상청 → 라오산 태청 코스 (디디)</div>
+              <div class="desc">약 30km, 1시간, 디디 100–140元 (≈21,500–30,100원). 4명 분담 ≈ 25–35元/인 (5,400–7,500원). 메트로 11호선 옵션도 있으나 환승 복잡, 디디 강추.</div>
+            </div>
+          </li>
+          <li>
+            <div class="dot sight">🚡</div>
+            <div class="item">
+              <div class="row1"><span class="time">14:30–17:00</span></div>
+              <div class="name"><a href="https://www.google.com/maps/search/?api=1&query=%E5%B4%82%E5%B1%B1+%E5%A4%AA%E6%B8%85%E5%AE%AB" target="_blank" rel="noopener">라오산 (崂山) 태청궁 + 케이블카</a></div>
+              <div class="desc">해발 1132m '명산 1호'. 태청 풍경구 입구→케이블카(상삼황 索道)→정상에서 바다·산세 360°→하산→태청궁(明 만력 28년 중수, 도교 본산). <b>케이블카 막차 17:00</b>이라 14:30 도착 마지노선.</div>
+              <div class="meta-row">
+                <span>🎫 입장 130元 + 케이블카 왕복 80元 (≈45,000원/인)</span><span>⏱ 2.5h</span>
+                <a href="https://kimsgotmoney.com/145" target="_blank" rel="noopener" style="color:#7dd3fc">📝 라오산 안 가면 칭다오 덜 본 것 (kimsgotmoney)</a>
+                <a href="https://brunch.co.kr/@3da9a3697fac45e/137" target="_blank" rel="noopener" style="color:#7dd3fc">📝 노산에 오르다 — 케이블카 후기 (brunch)</a>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="dot meal">🦞</div>
+            <div class="item">
+              <div class="row1"><span class="time">17:00–18:30</span></div>
+              <div class="name">라오산 입구 농가 식당 — 해산물 저녁</div>
+              <div class="desc">태청궁 출구 일대 노포 농가식당. 라오산 두부·해산물·민물생선. 1인 80–120元 (≈17,200–25,800원).</div>
+            </div>
+          </li>
+          <li>
+            <div class="dot transport">🚖</div>
+            <div class="item">
+              <div class="row1"><span class="time">18:30–20:00</span></div>
+              <div class="name">라오산 → 청양 (디디)</div>
+              <div class="desc">약 40km, 1.5시간, 디디 130–170元 (≈28,000–36,500원). 4명 분담 ≈ 35–45元/인. 시간 늦어서 메트로 막차 위험, 디디 강제.</div>
+            </div>
+          </li>
+          <li>
+            <div class="dot lodging">🛏</div>
+            <div class="item">
+              <div class="row1"><span class="time">~20:00</span></div>
+              <div class="name">숙소 복귀 · 만커 메이리신청</div>
+              <div class="desc">하루 일정 길어 일찍 복귀. 단지 내 편의점/배달 OK.</div>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <!-- DAY 3 -->
+      <section class="day">
+        <h2>Day 3</h2>
+        <h3>세기공원 + 마사지 + 공항 (그룹 분리)<span class="date">5.19 화</span></h3>
+        <ol class="tl">
+          <li>
+            <div class="dot lodging">🧳</div>
+            <div class="item">
+              <div class="row1"><span class="time">07:30–08:30</span></div>
+              <div class="name">체크아웃 + 짐 정리</div>
+              <div class="desc">짐은 단지 보관 또는 가지고 이동. 세기공원·마사지 도보 거리라 잠깐 맡기기 OK.</div>
+            </div>
+          </li>
+          <li>
+            <div class="dot sight">🌳</div>
+            <div class="item">
+              <div class="row1"><span class="time">08:30–09:30</span></div>
+              <div class="name"><a href="https://www.google.com/maps/search/?api=1&query=%E9%9D%92%E5%B2%9B%E5%9F%8E%E9%98%B3%E4%B8%96%E7%BA%AA%E5%85%AC%E5%9B%AD" target="_blank" rel="noopener">청양 세기공원 (世纪公园) 산책</a></div>
+              <div class="desc">단지 동측, 도보권. 인공호수·올림픽 조형물·산책로. 한인촌 옆이라 한국 간판 보임.</div>
+              <div class="meta-row">
+                <span>🎫 무료</span><span>⏱ 1h</span>
+                <a href="https://www.keyzard.cc/jhszirong/nb/223806017549" target="_blank" rel="noopener" style="color:#7dd3fc">📝 청양 세기공원 총정리 (keyzard)</a>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="dot cafe">💆</div>
+            <div class="item">
+              <div class="row1"><span class="time">09:30–11:00</span></div>
+              <div class="name"><a href="https://www.google.com/maps/search/?api=1&query=%E9%9D%92%E5%B2%9B+%E5%9F%8E%E9%98%B3+%E6%8C%89%E6%91%A9" target="_blank" rel="noopener">청양 마사지 (1.5h)</a></div>
+              <div class="desc">청양구 한인촌 일대 한국어 가능 마사지숍 다수. <b>족생당</b>·<b>청죽원</b>·<b>무씨진공부</b> 모두 한국어 가격표 보유. 발 마사지 35분 59元 (≈12,700원), 전신 60분 80–120元 (≈17,200–25,800원).</div>
+              <div class="meta-row">
+                <a href="https://brunch.co.kr/@@g9CB/31" target="_blank" rel="noopener" style="color:#7dd3fc">📝 칭따오 전통 마사지 후기 (brunch)</a>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="dot lodging">🧳</div>
+            <div class="item">
+              <div class="row1"><span class="time">11:00–11:30</span></div>
+              <div class="name">숙소에서 짐 픽업</div>
+              <div class="desc">단지 보관소에 맡긴 짐 회수, 공항행 디디 호출.</div>
+            </div>
+          </li>
+          <li>
+            <div class="dot transport">🚖</div>
+            <div class="item">
+              <div class="row1"><span class="time">11:30–12:00</span></div>
+              <div class="name">청양 → 자오둥 공항</div>
+              <div class="desc"><b>디디</b> 25분, 80–130元 (≈17,200–28,000원). 4명 분담 ≈ 22–35元/인. 캐리어 4개라 메트로보다 디디 강추.</div>
+            </div>
+          </li>
+          <li>
+            <div class="dot transport">✈</div>
+            <div class="item">
+              <div class="row1"><span class="time">12:00–12:30</span><span><span class="group-tag b">B</span>먼저 체크인</span></div>
+              <div class="name">공항 도착 · 팍/릉오 체크인</div>
+              <div class="desc">출발 13:15. 국제선 1시간 전 게이트 도착 = 12:15까지 보안 통과 권장. 빠듯.</div>
+            </div>
+          </li>
+          <li>
+            <div class="dot meal">🥡</div>
+            <div class="item">
+              <div class="row1"><span class="time">12:30–13:00</span></div>
+              <div class="name">공항 짧은 인사 / 팍·릉오 게이트</div>
+              <div class="desc">팍/릉오는 시간 빠듯해 보안 후 게이트 직행. 점심은 게이트 인근 라이트 푸드.</div>
+            </div>
+          </li>
+          <li>
+            <div class="dot transport">✈</div>
+            <div class="item">
+              <div class="row1"><span class="time">13:15–16:10</span><span class="group-tag b">B</span></div>
+              <div class="name">칭다오 → 김해 (PUS) · 팍, 릉오</div>
+            </div>
+          </li>
+          <li>
+            <div class="dot transport">✈</div>
+            <div class="item">
+              <div class="row1"><span class="time">12:30–14:00</span><span><span class="group-tag">A</span>천천히</span></div>
+              <div class="name">쿸/켱 체크인 + 점심 + 라운지/면세점</div>
+              <div class="desc">출발 14:55 → 보안 13:55 권장. 1시간 정도 공항 식당/면세점 여유.</div>
+            </div>
+          </li>
+          <li>
+            <div class="dot transport">✈</div>
+            <div class="item">
+              <div class="row1"><span class="time">14:55–17:40</span><span class="group-tag">A</span></div>
+              <div class="name">칭다오 → 인천 (ICN) · 쿸, 켱</div>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <!-- TRANSIT TABLE -->
+      <section class="day">
+        <h2>참고</h2>
+        <h3>구간별 이동 비교: 메트로 vs 디디(택시)<span class="date">청양구 万科魅力新城 기준</span></h3>
+        <table class="transit">
+          <thead>
+            <tr>
+              <th>구간</th>
+              <th>거리</th>
+              <th>메트로 시간 / 요금</th>
+              <th>디디 시간 / 요금</th>
+              <th>4명 분담 시 디디/인</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>TAO 공항 ↔ 청양 (단지)</td>
+              <td>~25–35km</td>
+              <td class="time">25–40분 / 5–7元 (1,100–1,500원)</td>
+              <td class="time">25–35분 / 80–130元 (17,200–28,000원)</td>
+              <td>20–35元 (4,300–7,500원)</td>
+            </tr>
+            <tr>
+              <td>청양 ↔ 천주교당 / 5.4광장 (다운타운)</td>
+              <td>~30–35km</td>
+              <td class="time">70–90분 / 7–15元* (1,500–3,200원)</td>
+              <td class="time">45–60분 / 130–180元 (28,000–38,700원)</td>
+              <td>35–45元 (7,500–9,700원)</td>
+            </tr>
+            <tr>
+              <td>청양 ↔ 등주로 (맥주박물관)</td>
+              <td>~25–30km</td>
+              <td class="time">60–80분 / 7–13元* (1,500–2,800원)</td>
+              <td class="time">40–55분 / 90–130元 (19,400–28,000원)</td>
+              <td>25–35元 (5,400–7,500원)</td>
+            </tr>
+            <tr>
+              <td>맥주박물관 ↔ 완상청 (5.4광장)</td>
+              <td>~5–6km</td>
+              <td class="time">2→3호선 30분 / 4元 (860원)</td>
+              <td class="time">10–15분 / 25–30元 (5,400–6,500원)</td>
+              <td>7元 (1,500원)</td>
+            </tr>
+            <tr>
+              <td>완상청 ↔ 라오산 태청 코스</td>
+              <td>~30km</td>
+              <td class="time">11호선 + 환승 90분 / 8元</td>
+              <td class="time">60분 / 100–140元 (21,500–30,100원)</td>
+              <td>25–35元 (5,400–7,500원)</td>
+            </tr>
+            <tr>
+              <td>라오산 ↔ 청양</td>
+              <td>~40km</td>
+              <td class="time">버스+메트로 110분+ / 12元</td>
+              <td class="time">90분 / 130–170元 (28,000–36,500원)</td>
+              <td>35–45元 (7,500–9,700원)</td>
+            </tr>
+            <tr>
+              <td>천주교당 ↔ 소어산</td>
+              <td>~700m</td>
+              <td class="time">도보 10–15분 / —</td>
+              <td class="time">5분 / 13元 기본요금 (≈2,800원)</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td>소어산 ↔ 5.4광장</td>
+              <td>~5km</td>
+              <td class="time">3호선 20분 / 4元 (860원)</td>
+              <td class="time">10–15분 / 25–30元 (5,400–6,500원)</td>
+              <td>7元 (1,500원)</td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="font-size:11px;color:var(--muted);margin-top:8px">
+          * 청양↔다운타운 메트로는 단지에서 가장 가까운 메트로역까지 디디 13–15元 (≈2,800–3,200원) 단거리 이동 + 메트로 요금 합산.<br/>
+          ** 칭다오 택시 기준: 起步价 9元 (≈1,950원) / 3km + 2.0元 (≈430원) / km, 23시 이후 +20%. 디디는 거의 동일하거나 5–10% 저렴.<br/>
+          *** 환산은 1元 ≈ 215원 기준 (2026.05.10 시점 시세). 실시간 환율은 변동 가능.<br/>
+          *** 4명이면 디디 1대 분담이 메트로 요금과 거의 비슷 (시간은 30–50% 단축). 짐 있을 때나 야간엔 디디 우선.
+        </p>
+
+        <h3 style="margin-top:18px">개인 블로거 후기 — 택시·메트로·디디<span class="date">매거진/위키/커뮤니티 제외</span></h3>
+        <ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.8">
+          <li>
+            <a href="https://janjan167.com/entry/%EC%A4%91%EA%B5%AD-%EC%B9%AD%EB%8B%A4%EC%98%A4-%EA%B3%B5%ED%95%AD%EC%97%90%EC%84%9C-%EC%8B%9C%EB%82%B4-%EA%B0%80%EB%8A%94-%EB%B0%A9%EB%B2%95-%EA%B3%B5%ED%95%AD%EB%B2%84%EC%8A%A4-%EC%A7%80%ED%95%98%EC%B2%A0-%EA%B3%A0%EC%86%8D%EC%B2%A0%EB%8F%84-%ED%83%9D%EC%8B%9C-%EC%9E%90%EC%98%A4%EB%91%A5-%EA%B5%AD%EC%A0%9C%EA%B3%B5%ED%95%AD-%EC%95%88%EB%82%B4" target="_blank" rel="noopener" style="color:#7dd3fc">
+              janjan167 블로그 — 공항 → 시내 4가지 비교 (버스·지하철·고속철·택시)
+            </a>
+            <span style="color:var(--muted)"> · 캐리어 + 인원 기준 추천 시나리오</span>
+          </li>
+          <li>
+            <a href="https://blog.wise-leader.com/tour_qingdao2023/" target="_blank" rel="noopener" style="color:#7dd3fc">
+              굿대디 — 가족여행 칭다오 후기
+            </a>
+            <span style="color:var(--muted)"> · 4인 가족 동선·디디·메트로 실사용기</span>
+          </li>
+          <li>
+            <a href="https://brunch.co.kr/@203cool/719" target="_blank" rel="noopener" style="color:#7dd3fc">
+              brunch @203cool — 칭다오 여행에서 알게 된 18가지
+            </a>
+            <span style="color:var(--muted)"> · 결제·교통·동선 함정 묶음 (2024.12 후기)</span>
+          </li>
+          <li>
+            <a href="https://brunch.co.kr/@hotelscomkr/727" target="_blank" rel="noopener" style="color:#7dd3fc">
+              brunch @hotelscomkr — 청도 2박3일 코스 + 호텔 후기
+            </a>
+            <span style="color:var(--muted)"> · 시난구 동선 + 숙소 선택 팁</span>
+          </li>
+          <li>
+            <a href="https://estimastory.com/2019/01/01/didichuxing/" target="_blank" rel="noopener" style="color:#7dd3fc">
+              에스티마 블로그 — 디디추싱 실사용기 (외국인 결제·인터페이스)
+            </a>
+            <span style="color:var(--muted)"> · 디디 앱 한글 UI·결제·매칭 흐름</span>
+          </li>
+        </ul>
+      </section>
+
+      <!-- NOTES -->
+      <section class="day notes">
+        <h2>메모 / 팁</h2>
+        <h3>널널 일정 설계 의도</h3>
+        <ul>
+          <li><b>청양구 ↔ 다운타운 왕복 1.5–2.5시간</b>이라 다운타운 일정은 한 번 가서 묶어 보는 구조.</li>
+          <li>Day 1: 도착일이라 점심·체크인 후 <b>오후 4시쯤 본격 시작</b>. 시난구 묶음 (천주교당 → 소어산 노을 → 5.4광장 야경).</li>
+          <li>Day 2: 맥주박물관(09:30) 확정 → 완상청 5층 점심 → 라오산 케이블카+태청궁(14:30 도착, <b>케이블카 막차 17:00</b>). <b>점심 → 라오산 이동만 디디 1시간</b>이라 시간 빠듯.</li>
+          <li>Day 3: 출발일 + 그룹 분리. <b>10시에 모두 공항으로</b> 출발해 함께 점심 후 자연스럽게 헤어짐.</li>
+          <li>지하철 막차: 대부분 노선 <b>21:30 종료</b>. 그 이후엔 디디 필수.</li>
+          <li>알리페이 / 위챗페이는 한국 카드 등록 후 사용 가능. <b>출국 전 등록</b> 필수 (앱스토어에서 미리).</li>
+          <li>맥주박물관은 <b>예약제</b>라 위챗 미니프로그램 또는 트립닷컴으로 미리 시간대 확정 권장.</li>
+          <li>5월 칭다오는 <b>10–22℃</b>. 해변 바람 강해서 가벼운 자켓 필요.</li>
+          <li><b>빠진 후보:</b> 팔대관 (시난 산책 코스). Day 1에 천주교당+소어산이 시난구 한 묶음이라 팔대관까지 넣으면 빡세짐.</li>
+          <li><b>라오산 풀버전이 부담스러우면:</b> Day 2 점심 후 라오산 빼고 신호산+독일거리(완상청 인근)로 가벼운 시난구 산책 + 청양 마사지(저녁)으로 대체 가능.</li>
+          <li>Day 3: <b>세기공원이 단지 도보권</b>이라 짐 챙겨 가볍게. 마사지 후 디디로 공항 직행. 박/한 출발이 빠듯하니 마사지 11시까지 끝내야.</li>
+        </ul>
+      </section>
+
+      <!-- CHINESE PHRASES -->
+      <section class="day">
+        <h2>회화</h2>
+        <h3>긴급 중국어 한 장<span class="date">한자 · 핀인 · 한글 발음</span></h3>
+
+        <div style="margin-top:10px">
+          <h4 style="margin:6px 0;font-size:12px;color:var(--teal);letter-spacing:0.1em;text-transform:uppercase">인사 · 기본</h4>
+          <table class="transit">
+            <thead><tr><th>한국어</th><th>중국어</th><th>핀인 / 발음</th></tr></thead>
+            <tbody>
+              <tr><td>안녕하세요</td><td>你好</td><td>nǐ hǎo · 니 하오</td></tr>
+              <tr><td>감사합니다</td><td>谢谢</td><td>xiè xie · 씨에 시에</td></tr>
+              <tr><td>죄송합니다 / 실례</td><td>对不起 / 不好意思</td><td>duì bu qǐ · 뚜이 부 치 / bù hǎo yì si · 뿌 하오 이 쓰</td></tr>
+              <tr><td>네 / 아니오</td><td>是 / 不是</td><td>shì / bú shì · 쓰 / 부 쓰</td></tr>
+              <tr><td>알아요 / 몰라요</td><td>知道 / 不知道</td><td>zhī dào / bù zhī dào · 쯔 따오 / 뿌 쯔 따오</td></tr>
+              <tr><td>중국어 못해요</td><td>我不会说中文</td><td>wǒ bú huì shuō zhōng wén · 워 부 후이 슈오 쫑 원</td></tr>
+              <tr><td>한국 사람이에요</td><td>我是韩国人</td><td>wǒ shì hán guó rén · 워 쓰 한 궈 런</td></tr>
+              <tr><td>영어 할 줄 아세요?</td><td>你会说英语吗?</td><td>nǐ huì shuō yīng yǔ ma · 니 후이 슈오 잉 위 마</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top:14px">
+          <h4 style="margin:6px 0;font-size:12px;color:var(--teal);letter-spacing:0.1em;text-transform:uppercase">식당</h4>
+          <table class="transit">
+            <thead><tr><th>한국어</th><th>중국어</th><th>핀인 / 발음</th></tr></thead>
+            <tbody>
+              <tr><td>메뉴 주세요</td><td>菜单, 谢谢</td><td>cài dān, xiè xie · 차이 단, 씨에 시에</td></tr>
+              <tr><td>이거 주세요 (가리키며)</td><td>来这个</td><td>lái zhè ge · 라이 쩌 거</td></tr>
+              <tr><td>맥주 한 병요 / 두 잔요</td><td>一瓶啤酒 / 两杯啤酒</td><td>yì píng pí jiǔ / liǎng bēi pí jiǔ · 이 핑 피 지우 / 량 베이 피 지우</td></tr>
+              <tr><td>맵게 하지 마세요</td><td>不要辣</td><td>bú yào là · 부 야오 라</td></tr>
+              <tr><td>고수 빼주세요</td><td>不要香菜</td><td>bú yào xiāng cài · 부 야오 시앙 차이</td></tr>
+              <tr><td>계산할게요</td><td>买单 / 结账</td><td>mǎi dān / jié zhàng · 마이 단 / 지에 짱</td></tr>
+              <tr><td>위챗으로 결제할게요</td><td>用微信付</td><td>yòng wēi xìn fù · 용 웨이 신 푸</td></tr>
+              <tr><td>알리페이 받으세요?</td><td>可以用支付宝吗?</td><td>kě yǐ yòng zhī fù bǎo ma · 커 이 용 즈 푸 바오 마</td></tr>
+              <tr><td>맛있어요</td><td>好吃</td><td>hǎo chī · 하오 츠</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top:14px">
+          <h4 style="margin:6px 0;font-size:12px;color:var(--teal);letter-spacing:0.1em;text-transform:uppercase">택시 · 디디</h4>
+          <table class="transit">
+            <thead><tr><th>한국어</th><th>중국어</th><th>핀인 / 발음</th></tr></thead>
+            <tbody>
+              <tr><td>여기로 가주세요 (지도 보여주며)</td><td>请去这里</td><td>qǐng qù zhè li · 칭 취 쩌 리</td></tr>
+              <tr><td>공항으로 가주세요</td><td>去胶东机场</td><td>qù jiāo dōng jī chǎng · 취 지아오 둥 지 창</td></tr>
+              <tr><td>万科魅力新城으로 가주세요</td><td>去万科魅力新城 (城阳区)</td><td>qù wàn kē mèi lì xīn chéng · 취 완 커 메이 리 신 청</td></tr>
+              <tr><td>잠시만 기다려주세요</td><td>请等一下</td><td>qǐng děng yí xià · 칭 덩 이 시아</td></tr>
+              <tr><td>여기서 세워주세요</td><td>就这里停</td><td>jiù zhè li tíng · 지우 쩌 리 팅</td></tr>
+              <tr><td>얼마예요?</td><td>多少钱?</td><td>duō shǎo qián · 뚜오 샤오 치엔</td></tr>
+              <tr><td>너무 비싸요</td><td>太贵了</td><td>tài guì le · 타이 꾸이 러</td></tr>
+              <tr><td>영수증 주세요</td><td>请给我发票</td><td>qǐng gěi wǒ fā piào · 칭 게이 워 파 피아오</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top:14px">
+          <h4 style="margin:6px 0;font-size:12px;color:var(--teal);letter-spacing:0.1em;text-transform:uppercase">길 묻기 · 지하철</h4>
+          <table class="transit">
+            <thead><tr><th>한국어</th><th>중국어</th><th>핀인 / 발음</th></tr></thead>
+            <tbody>
+              <tr><td>화장실 어디예요?</td><td>洗手间在哪里?</td><td>xǐ shǒu jiān zài nǎ li · 시 셔우 지엔 짜이 나 리</td></tr>
+              <tr><td>지하철역 어디예요?</td><td>地铁站在哪里?</td><td>dì tiě zhàn zài nǎ li · 디 티에 짠 짜이 나 리</td></tr>
+              <tr><td>몇 호선 타요?</td><td>坐几号线?</td><td>zuò jǐ hào xiàn · 쭈오 지 하오 시엔</td></tr>
+              <tr><td>여기서 멀어요?</td><td>离这里远吗?</td><td>lí zhè li yuǎn ma · 리 쩌 리 위엔 마</td></tr>
+              <tr><td>걸어갈 수 있어요?</td><td>能走过去吗?</td><td>néng zǒu guò qù ma · 넝 쪼우 꾸어 취 마</td></tr>
+              <tr><td>출구 어디예요?</td><td>出口在哪?</td><td>chū kǒu zài nǎ · 추 커우 짜이 나</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top:14px">
+          <h4 style="margin:6px 0;font-size:12px;color:var(--teal);letter-spacing:0.1em;text-transform:uppercase">숙소 · 쇼핑</h4>
+          <table class="transit">
+            <thead><tr><th>한국어</th><th>중국어</th><th>핀인 / 발음</th></tr></thead>
+            <tbody>
+              <tr><td>체크인할게요</td><td>我要入住</td><td>wǒ yào rù zhù · 워 야오 루 쭈</td></tr>
+              <tr><td>예약했어요. 이름은 ___</td><td>我有预订, 名字是 ___</td><td>wǒ yǒu yù dìng, míng zi shì · 워 여우 위 띵, 밍 즈 쓰</td></tr>
+              <tr><td>WiFi 비밀번호?</td><td>WiFi 密码?</td><td>WiFi mì mǎ · 와이파이 미 마</td></tr>
+              <tr><td>이거 얼마예요?</td><td>这个多少钱?</td><td>zhè ge duō shǎo qián · 쩌 거 뚜오 샤오 치엔</td></tr>
+              <tr><td>좀 깎아주세요</td><td>便宜一点儿</td><td>pián yi yì diǎnr · 피엔 이 이 디알</td></tr>
+              <tr><td>봉투 하나 주세요</td><td>给我一个袋子</td><td>gěi wǒ yí gè dài zi · 게이 워 이 거 따이 즈</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top:14px">
+          <h4 style="margin:6px 0;font-size:12px;color:var(--rose);letter-spacing:0.1em;text-transform:uppercase">긴급</h4>
+          <table class="transit">
+            <thead><tr><th>한국어</th><th>중국어</th><th>핀인 / 발음</th></tr></thead>
+            <tbody>
+              <tr><td>도와주세요!</td><td>救命! / 帮帮我!</td><td>jiù mìng / bāng bāng wǒ · 지우 밍 / 빵 빵 워</td></tr>
+              <tr><td>병원 어디예요?</td><td>医院在哪里?</td><td>yī yuàn zài nǎ li · 이 위엔 짜이 나 리</td></tr>
+              <tr><td>약국이요</td><td>药店</td><td>yào diàn · 야오 디엔</td></tr>
+              <tr><td>아파요</td><td>我不舒服 / 我疼</td><td>wǒ bù shū fu / wǒ téng · 워 뿌 슈 푸 / 워 텅</td></tr>
+              <tr><td>지갑/여권 잃어버렸어요</td><td>我的钱包/护照丢了</td><td>wǒ de qián bāo / hù zhào diū le · 워 더 치엔 빠오 / 후 짜오 띠우 러</td></tr>
+              <tr><td>경찰 불러주세요</td><td>请叫警察</td><td>qǐng jiào jǐng chá · 칭 지아오 징 차</td></tr>
+              <tr><td>한국 영사관 (칭다오)</td><td>韩国领事馆 (青岛)</td><td>hán guó lǐng shì guǎn · 한 궈 링 쓰 관</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:11px;color:var(--muted);margin-top:6px">
+            🚨 긴급전화: <b>110</b>(경찰) · <b>120</b>(구급) · <b>119</b>(소방) · 주칭다오 한국 총영사관 야간 사건사고 +86 186-6018-0448
+          </p>
+        </div>
+
+        <p style="font-size:11px;color:var(--muted);margin-top:10px">
+          💡 한자가 잘 안 통할 땐 <b>스마트폰 메모장에 한자로 쳐서 보여주기</b>가 가장 빠름. 발음은 4성조라 안 통하면 화면 보여주는 게 무조건 정답.
+        </p>
+      </section>
+
+      <footer style="margin-top:24px;color:var(--dim);font-size:11px;text-align:center">
+        제안 v0.6 · 팔대관 빼고 천주교당·소어산·5.4광장·완상청·라오산·세기공원·마사지 살림 · 시간/요금은 추정치
+      </footer>
+    </div>
+  </body>
+</html>
