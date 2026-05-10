@@ -104,6 +104,15 @@ export const itinerary: Day[] = [
         address: '青岛市城阳区万科魅力新城',
       },
     ],
+    cost: {
+      perPerson: '~312元',
+      perPersonKrw: '~67,150원',
+      highlights: [
+        '디디 4구간 분담 ~117元',
+        '5.4광장 해산물 저녁 120元',
+        '천주교당·소어산 입장 25元',
+      ],
+    },
   },
   {
     date: '2026-05-18',
@@ -193,6 +202,15 @@ export const itinerary: Day[] = [
         note: '하루 일정 길어 일찍 복귀. 단지 내 편의점/배달 OK.',
       },
     ],
+    cost: {
+      perPerson: '~623元',
+      perPersonKrw: '~134,100원',
+      highlights: [
+        '라오산 입장 + 케이블카 210元',
+        '디디 4구간 분담 ~103元',
+        '맥주박물관 60元 / 완상청 점심 100元 / 라오산 농가 저녁 120元',
+      ],
+    },
   },
   {
     date: '2026-05-19',
@@ -276,5 +294,15 @@ export const itinerary: Day[] = [
         note: '쿸, 켱 (A조)',
       },
     ],
+    cost: {
+      perPerson: '~207元',
+      perPersonKrw: '~44,500원',
+      highlights: [
+        '마사지 60분 120元',
+        '청양→공항 디디 분담 27元',
+        '공항 점심 60元',
+      ],
+    },
   },
 ]
+

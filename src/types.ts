@@ -19,8 +19,15 @@ export type Place = {
   blogUrl?: string
 }
 
+export type DayCost = {
+  perPerson: string
+  perPersonKrw?: string
+  highlights?: string[]
+}
+
 export type Day = {
   date: string
   label: string
   places: Place[]
+  cost?: DayCost
 }
