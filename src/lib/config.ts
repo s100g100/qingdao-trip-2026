@@ -1,4 +1,6 @@
 export const ACCESS_PASSWORD = 'sina2026'
+export const MEMBERS = ['쿸', '켱', '릉오', '팍'] as const
+export type Member = (typeof MEMBERS)[number]
 export const PHOTOS_BUCKET = 'photos'
 export const MAX_IMAGE_DIM = 1600
 export const IMAGE_QUALITY = 0.82

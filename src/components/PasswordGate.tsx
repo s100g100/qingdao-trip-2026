@@ -1,17 +1,17 @@
 import { useState, type FormEvent } from 'react'
 import { Lock } from 'lucide-react'
-import { ACCESS_PASSWORD } from '../lib/config'
+import { ACCESS_PASSWORD, MEMBERS, type Member } from '../lib/config'
 import { unlock } from '../lib/access'
 
 export function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
   const [password, setPassword] = useState('')
-  const [name, setName] = useState('')
+  const [name, setName] = useState<Member | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
-    if (!name.trim()) {
-      setError('이름을 입력해줘')
+    if (!name) {
+      setError('본인 이름을 선택해줘')
       return
     }
     if (password.trim() !== ACCESS_PASSWORD) {
@@ -19,7 +19,7 @@ export function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
       setPassword('')
       return
     }
-    unlock(name.trim())
+    unlock(name)
     onUnlock()
   }
 
@@ -41,26 +41,37 @@ export function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
           칭다오 트립 2026
         </h1>
         <p className="mt-1 text-sm text-slate-400">
-          친구 4명 전용 · 비밀번호와 이름을 입력해줘
+          친구 4명 전용 · 본인 이름을 고르고 비밀번호를 입력해줘
         </p>
 
-        <label className="mt-5 block">
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+        <fieldset className="mt-5">
+          <legend className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
             본인 이름
-          </span>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => {
-              setName(e.target.value)
-              setError(null)
-            }}
-            placeholder="예: 진"
-            maxLength={20}
-            className="mt-1.5 block w-full rounded-xl bg-black/30 px-3 py-2.5 text-sm text-slate-50 ring-1 ring-white/10 placeholder:text-slate-500 focus:outline-none focus:ring-teal-400/60"
-            required
-          />
-        </label>
+          </legend>
+          <div className="mt-1.5 grid grid-cols-2 gap-2">
+            {MEMBERS.map((m) => {
+              const selected = name === m
+              return (
+                <button
+                  key={m}
+                  type="button"
+                  onClick={() => {
+                    setName(m)
+                    setError(null)
+                  }}
+                  className={`rounded-xl px-3 py-2.5 text-sm font-medium transition ${
+                    selected
+                      ? 'bg-gradient-to-br from-teal-400/90 to-sky-500/90 text-slate-950 ring-1 ring-white/30'
+                      : 'bg-black/30 text-slate-200 ring-1 ring-white/10 hover:bg-black/40'
+                  }`}
+                  aria-pressed={selected}
+                >
+                  {m}
+                </button>
+              )
+            })}
+          </div>
+        </fieldset>
 
         <label className="mt-3 block">
           <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
